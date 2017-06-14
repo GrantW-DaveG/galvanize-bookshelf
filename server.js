@@ -23,7 +23,7 @@ switch (app.get('env')) {
     break;
 
   default:
-    app.use(morgan('dev'));
+    // app.use(morgan('dev'));
 }
 
 app.use(bodyParser.json());
@@ -34,20 +34,20 @@ const path = require('path');
 app.use(express.static(path.join('public')));
 
 // CSRF protection
-app.use((req, res, next) => {
-  if (/json/.test(req.get('Accept'))) {
-    return next();
-  }
-
-  res.sendStatus(406);
-});
+// app.use((req, res, next) => {
+//   if (/json/.test(req.get('Accept'))) {
+//     return next();
+//   }
+//
+//   res.sendStatus(406);
+// });
 
 const books = require('./routes/books');
 const favorites = require('./routes/favorites');
 const token = require('./routes/token');
 const users = require('./routes/users');
 
-app.use(books);
+app.use('/books', books);
 app.use(favorites);
 app.use(token);
 app.use(users);

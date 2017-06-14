@@ -1,20 +1,31 @@
 'use strict';
 
 const express = require('express');
-const repo = require('./src/BooksRepository');
+const Repo = require('../src/books-repository');
 
 // eslint-disable-next-line new-cap
 const router = express.Router();
 
 
 
-router.get('/books', (req, res, next)=>{
+router.get('/', (req, res, next)=>{
+  let repo = new Repo('');
   repo.query()
-    .then();
+    .then((resolvedBooks) => {
+
+      if(resolvedBooks){
+        res.send(resolvedBooks);
+      }
+      else{
+        res.status(404).send('Not Found');
+      }
+
+    });
 });
 
-router.get('/books/:id', (req, res, next)=>{
-  repo.query()
+router.get('/:id', (req, res, next)=>{
+  let repo = new Repo('');
+  repo.query(req.params.id)
     .then((resolvedData)=>{
       res.send(resolvedData);
       return;
@@ -25,16 +36,28 @@ router.get('/books/:id', (req, res, next)=>{
     });
 });
 
-router.post('/books', (req, res, next)=>{
+router.post('/', (req, res, next)=>{
   let newEntry = req.body;
-  newEntry = repo.add(newEntry);
-  if(newEntery){
-    res.send(newEntry);
+  let repo = new Repo('');
+
+  //input validation before add call
+  if(!newEntry.title){
+    res.status(404).send('Title must not be blank');
+  }
+
+
+  let response = repo.add(newEntry);
+  response.then((responseEntry) => {
+
+    res.send(responseEntry);
     return;
-  }
-  else{
-    res.sendStatus(404);
-  }
+
+  })
+  .catch((err) => {
+    return err;
+  });
+
+
 
 });
 
