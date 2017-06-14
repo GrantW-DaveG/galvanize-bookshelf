@@ -34,7 +34,7 @@ router.get('/:id', (req, res, next)=>{
     })
     .catch((err)=>{
       res.sendStatus(404);
-      throw err;
+      return err;
     });
 });
 
@@ -51,7 +51,7 @@ router.get('/:id', (req, res, next)=>{
 
 
 router.post('/', (req, res, next)=>{
-  let newEntry = req.body;
+  let newEntry = humps.decamelizeKeys(req.body);
   let repo = new Repo();
 
   //input validation before add call
@@ -78,9 +78,19 @@ router.post('/', (req, res, next)=>{
 
   let response = repo.add(newEntry);
   response.then((responseEntry) => {
+
+    let returnObj = {};
+    returnObj.id = responseEntry[0].id;
+    returnObj.title = responseEntry[0].title;
+    returnObj.author = responseEntry[0].author;
+    returnObj.genre = responseEntry[0].genre;
+    returnObj.description = responseEntry[0].description;
+    returnObj.coverUrl = responseEntry[0].cover_url;
+
+
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Accept', 'application/json');
-    res.json(responseEntry[0]);
+    res.json(humps.camelizeKeys(returnObj));
     return;
   })
   .catch((err) => {
