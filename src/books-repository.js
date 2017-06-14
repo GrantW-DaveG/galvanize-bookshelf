@@ -41,12 +41,28 @@ class BooksRepository{
           return knex('books')
               .where('id',ids[0]);
 
-        });
-
+      });
     }
   }
 
-}
+  update(id, changes){
+
+    
+    return knex('books').where('id', id)
+      .then((origEntry) => {
+
+        let changedEntry = Object.assign({}, origEntry[0], changes);
+
+        return knex('books')
+          .where('id', id)
+          .update(changedEntry)
+          .returning('*');
+      })
+  }
+
+}//END class
+
+
 
 
 module.exports = BooksRepository;

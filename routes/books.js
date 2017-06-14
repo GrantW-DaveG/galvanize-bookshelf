@@ -38,30 +38,64 @@ router.get('/:id', (req, res, next)=>{
 
 router.post('/', (req, res, next)=>{
   let newEntry = req.body;
-  let repo = new Repo('');
+  let repo = new Repo();
 
   //input validation before add call
   if(!newEntry.title){
-    res.status(404).send('Title must not be blank');
+    res.status(400).send('Title must not be blank');
   }
-
+  else if(!newEntry.author){
+    res.status(400).send('Author must not be blank');
+  }
+  else if(!newEntry.genre){
+    res.status(400).send('Genre must not be blank');
+  }
+  else if(!newEntry.description){
+    res.status(400).send('Description must not be blank');
+  }
+  else if(!newEntry.cover_url){
+    res.status(400).send('Cover URL must not be blank');
+  }
 
   let response = repo.add(newEntry);
   response.then((responseEntry) => {
 
     res.send(responseEntry);
     return;
-
   })
   .catch((err) => {
     return err;
   });
+}); //END router.post
 
+router.patch('/:id', (req, res, next)=>{
+  let repo = new Repo();
+  let updateInfo = req.body;
+  let updateId = req.params.id;
 
+  //handles if index val is non a number
+  if(Number.isNaN(updateId)){
+    res.status(404).send('Not Found');
+    return;
+  }
+
+  let response = repo.update(updateId, updateInfo);
+  response.then((responseEntry) => {
+
+    // handle if out of bounds index
+    if(responseEntry.length === 0){
+      res.status(404).send('Not Found');
+      return;
+    }
+
+    res.send(responseEntry);
+    return;
+  })
+  .catch((err)=>{
+    return err;
+  });
 
 });
-
-
 
 module.exports = router;
 
