@@ -15,7 +15,7 @@ class BooksRepository{
   query(id){
 
     if(!id){
-      return knex('books');
+      return knex('books').orderBy('title');
     }
     else{
       return knex('books')
