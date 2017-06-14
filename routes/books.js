@@ -74,7 +74,7 @@ router.patch('/:id', (req, res, next)=>{
   let updateId = req.params.id;
 
   //handles if index val is non a number
-  if(Number.isNaN(updateId)){
+  if(isNaN(updateId)){
     res.status(404).send('Not Found');
     return;
   }
@@ -96,6 +96,30 @@ router.patch('/:id', (req, res, next)=>{
   });
 
 });
+
+router.delete('/:id', (req, res, next) => {
+  let repo = new Repo();
+  let removeId = req.params.id;
+  if(isNaN(removeId)) {
+    res.status(404).send('Not Found');
+  }
+  let response = repo.remove(removeId);
+
+  response
+    .then((deletedEntry) => {
+
+      if(deletedEntry[1]){
+        res.status(200).send(deletedEntry);
+        return;
+      }
+
+      res.status(404).send('Not Found');
+    })
+    .catch((err) => err);
+});
+
+
+
 
 module.exports = router;
 

@@ -47,7 +47,7 @@ class BooksRepository{
 
   update(id, changes){
 
-    
+
     return knex('books').where('id', id)
       .then((origEntry) => {
 
@@ -58,6 +58,23 @@ class BooksRepository{
           .update(changedEntry)
           .returning('*');
       })
+  }
+
+  remove(id){
+
+    return knex('books').where('id', id)
+      .then( (deletedEntry) => {
+        var returnArr = [deletedEntry];
+
+        let deleteOperation = knex('books')
+          .where('id', id)
+          .del();
+
+        return deleteOperation.then((isDeleted) => {
+          returnArr.push(isDeleted);
+          return returnArr;
+        })
+      });
   }
 
 }//END class
