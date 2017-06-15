@@ -24,7 +24,7 @@ suite('part3 routes', addDatabaseHooks(() => {
         firstName: 'John',
         lastName: 'Siracusa',
         email: 'john.siracusa@gmail.com',
-        password
+        password: password
       })
       .expect((res) => {
         delete res.body.createdAt;
