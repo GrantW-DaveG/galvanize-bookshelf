@@ -18,6 +18,7 @@ router.get('/', (req, res, next)=>{
         res.send(resolvedBooks);
       }
       else{
+        res.setHeader('Content-Type', 'plain/text');
         res.status(404).send('Not Found');
       }
 
@@ -29,6 +30,11 @@ router.get('/:id', (req, res, next)=>{
   repo.query(req.params.id)
     .then((resolvedData)=>{
       resolvedData = humps.camelizeKeys(resolvedData);
+      //NOTE handle empty set returned
+      if(resolvedData.length === 0){
+        res.setHeader('Content-Type', 'plain/text');
+        res.status(404).send('Not Found');
+      }
       res.send(resolvedData[0]);
       return;
     })
@@ -38,40 +44,38 @@ router.get('/:id', (req, res, next)=>{
     });
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
 router.post('/', (req, res, next)=>{
   let newEntry = humps.decamelizeKeys(req.body);
   let repo = new Repo();
 
   //input validation before add call
   if(!newEntry.title){
+    //NOTE set content-type
+    res.setHeader('Content-Type', 'plain/text');
     res.status(400).send('Title must not be blank');
     return;
   }
   else if(!newEntry.author){
+    //NOTE set content-type
+    res.setHeader('Content-Type', 'plain/text');
     res.status(400).send('Author must not be blank');
     return;
   }
   else if(!newEntry.genre){
+    //NOTE set content-type
+    res.setHeader('Content-Type', 'plain/text');
     res.status(400).send('Genre must not be blank');
     return;
   }
   else if(!newEntry.description){
+    //NOTE set content-type
+    res.setHeader('Content-Type', 'plain/text');
     res.status(400).send('Description must not be blank');
     return;
   }
   else if(!newEntry.cover_url){
+    //NOTE set content-type
+    res.setHeader('Content-Type', 'plain/text');
     res.status(400).send('Cover URL must not be blank');
     return;
   }
@@ -98,22 +102,6 @@ router.post('/', (req, res, next)=>{
   });
 }); //END router.post
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 router.patch('/:id', (req, res, next)=>{
   let repo = new Repo();
   let updateInfo = humps.decamelizeKeys(req.body);
@@ -121,6 +109,8 @@ router.patch('/:id', (req, res, next)=>{
 
   //handles if index val is non a number
   if(isNaN(updateId)){
+    //NOTE set content-type
+    res.setHeader('Content-Type', 'plain/text');
     res.status(404).send('Not Found');
     return;
   }
@@ -130,6 +120,8 @@ router.patch('/:id', (req, res, next)=>{
 
     // handle if out of bounds index
     if(responseEntry.length === 0){
+      //NOTE set content-type
+      res.setHeader('Content-Type', 'plain/text');
       res.status(404).send('Not Found');
       return;
     }
@@ -147,6 +139,8 @@ router.delete('/:id', (req, res, next) => {
   let repo = new Repo();
   let removeId = req.params.id;
   if(isNaN(removeId)) {
+    //NOTE set content-type
+    res.setHeader('Content-Type', 'plain/text');
     res.status(404).send('Not Found');
   }
   let response = repo.remove(removeId);
@@ -164,7 +158,8 @@ router.delete('/:id', (req, res, next) => {
         res.status(200).send(returnObj);
         return;
       }
-
+      //NOTE set content-type
+      res.setHeader('Content-Type', 'plain/text');
       res.status(404).send('Not Found');
     })
     .catch((err) => err);
