@@ -50,10 +50,10 @@ class BooksRepository{
     return knex('books').where('id', id)
       .then((origEntry) => {
 
-        //NOTE if invalid id, return empty
         if(origEntry.length === 0){
-          return [];
+          return origEntry;
         }
+
         let changedEntry = Object.assign({}, origEntry[0], changes);
 
         return knex('books')
