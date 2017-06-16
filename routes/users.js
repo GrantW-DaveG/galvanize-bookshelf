@@ -16,28 +16,24 @@ router.post('/', (req, res, next) =>{
     let returnedColumns ={};
     let saltRounds= 12;
 
+    console.log(body);
     bcrypt.hash(body.password, saltRounds)
-      .then(function(hash) {
-        body.hashed_password = hash;
-        console.log(body.hashed_password);
+    .then((hash) => {
+      body.hashed_password = hash;
+      return repo.register(body);
     })
-    repo.register(body)
-      .then((resolvedColumns) => {
-        console.log(resolvedColumns, "TESSST");
-        if (resolvedColumns.length > 0) {
-          res.send(resolvedColumns);
-
-        } else {
-          res.status(400).send('Not Found');  //NOTE update semantics
-          return;
-        }
-      })
-      .catch(err => {
-      console.log(err);
+    .then((resolvedColumns) => {
+      if (resolvedColumns.length > 0 ){//&& resolvedColumns.name !== 'error') {
+        res.send(resolvedColumns);
+        return;
+      } else {
+        res.status(400).send('Not Found');  //NOTE update semantics
+        return;
+      }
+    })
+    .catch(err => {
       res.send(err);
     });
-
-
   });
 
 
@@ -59,7 +55,6 @@ router.post('/', (req, res, next) =>{
             returnedColumns.first_name = body.first_name;
             returnedColumns.last_name = body.last_name;
             returnedColumns.email = body.email;
-            // console.log(returnedColumns);
             return bcrypt.compare(body.password, resolvedColumns[0].hashed_password);
 
 
@@ -81,7 +76,6 @@ router.post('/', (req, res, next) =>{
 
       })
       .catch(err => {
-        // console.log(err);
         res.send(err);
       });
 

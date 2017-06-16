@@ -7,19 +7,15 @@ class UsersRepository {
   constructor() {
   }
   authenticate(body){
-    //must select hashed
-    // console.log(body);
     return knex('users')
       .select('id', "hashed_password")
       .where({first_name: body.first_name,  last_name: body.last_name, email: body.email});
 
   }
   register(body){
-    //must select hashed
-    // console.log(body.hashed_password);
+    // console.log('***********');
     return knex('users')
       .insert({first_name:body.first_name, last_name: body.last_name, email: body.email, hashed_password: body.hashed_password})
-      .whereNotExists(knex('users').where('email', body.email))
       .returning('id', 'first_name', 'last_name', 'email');
 
   }
