@@ -20,11 +20,11 @@ router.post('/', (req, res, next) =>{
       return repo.register(body);
     })
     .then((resolvedColumns) => {
-      if (resolvedColumns.length > 0 ){//&& resolvedColumns.name !== 'error') {
+      if (resolvedColumns.length > 0 && resolvedColumns.name !== 'error') {
         res.send(humps.camelizeKeys(resolvedColumns[0]));
         return;
       } else {
-        res.status(400).send('Not Found');  //NOTE update semantics
+        res.status(400).send('Not Found');
         return;
       }
     })
