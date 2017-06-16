@@ -1,22 +1,19 @@
 'use strict';
 
 var bcrypt = require('bcrypt');
-
-
-
-
 const express = require('express');
 const Repo = require('../src/user-repository');
 const humps = require('humps');
 // eslint-disable-next-line new-cap
 const router = express.Router();
+
+
 router.post('/', (req, res, next) =>{
     let repo = new Repo();
     let body = humps.decamelizeKeys(req.body);
     let returnedColumns ={};
     let saltRounds= 12;
 
-    console.log(body);
     bcrypt.hash(body.password, saltRounds)
     .then((hash) => {
       body.hashed_password = hash;
@@ -24,7 +21,7 @@ router.post('/', (req, res, next) =>{
     })
     .then((resolvedColumns) => {
       if (resolvedColumns.length > 0 ){//&& resolvedColumns.name !== 'error') {
-        res.send(resolvedColumns);
+        res.send(humps.camelizeKeys(resolvedColumns[0]));
         return;
       } else {
         res.status(400).send('Not Found');  //NOTE update semantics
