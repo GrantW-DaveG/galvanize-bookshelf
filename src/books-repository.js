@@ -45,9 +45,12 @@ class BooksRepository{
 
   update(id, changes){
 
-
     return knex('books').where('id', id)
       .then((origEntry) => {
+
+        if(origEntry.length === 0){
+          return origEntry;
+        }
 
         let changedEntry = Object.assign({}, origEntry[0], changes);
 
