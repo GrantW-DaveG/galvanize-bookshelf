@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const Repo = require('../src/tokenRepository');
-const saltrounds = 12;
+
 
 var repo = new Repo();
 
@@ -103,6 +103,3 @@ function checkForToken(req, res, next){
 
 
 module.exports = router;
-
-
-

@@ -48,7 +48,7 @@ const token = require('./routes/token');
 const users = require('./routes/users');
 
 app.use('/books', books);
-app.use(favorites);
+app.use('/favorites', favorites);
 app.use('/token', token);
 app.use('/users', users);
 

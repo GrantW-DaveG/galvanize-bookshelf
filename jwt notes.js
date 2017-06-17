@@ -5,7 +5,7 @@ function tryuserLogin( req, res, next) {
 
 router.post('/', checkifuserisregistered, tryuserlogin, (req, res) => {
   const jwtPayload ={
-    iss: "lwtLesson";
+    iss: "jwtLesson";
     sub: {
       unam: req.user.username,
       id: req.user.id
@@ -20,7 +20,7 @@ router.post('/', checkifuserisregistered, tryuserlogin, (req, res) => {
 })
 
 
-
+jwt was inside cookie header bc we res.send(COOKIE)
 function checkifuserisregistered() {
   destruct
   const {username, password} = req.body
