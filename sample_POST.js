@@ -23,3 +23,12 @@ http -p HBhb DELETE localhost:8000/books/10
 /*** USERS ***/
 //POST / register()
 http -p HBhb POST :8000/users first_name='John' last_name='Siracusa' email='john.siracusa@gmail.com'  password='ilikebigcats'
+
+/*** TOKEN ***/
+http -p HBhb POST :8000/token email='jkrowling@gmail.com' password='youreawizard'
+
+http -p HBhb GET :8000/token 
+
+
+
+

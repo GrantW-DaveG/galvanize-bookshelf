@@ -5,12 +5,6 @@ const knex = require('../knex');
 
 class UsersRepository {
 
-  authenticate(body){
-    return knex('users')
-      .select('id', "hashed_password")
-      .where({first_name: body.first_name,  last_name: body.last_name, email: body.email});
-  }
-
   register(body){
     return knex.insert({first_name:body.first_name, last_name: body.last_name, email: body.email, hashed_password: body.hashed_password}, 'id')
       .into('users')
