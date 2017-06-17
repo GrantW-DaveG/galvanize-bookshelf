@@ -27,7 +27,13 @@ http -p HBhb POST :8000/users first_name='John' last_name='Siracusa' email='john
 /*** TOKEN ***/
 http -p HBhb POST :8000/token email='jkrowling@gmail.com' password='youreawizard'
 
-http -p HBhb GET :8000/token 
+http -p HBhb GET :8000/token
+
+
+/*** FAVORITES ***/
+
+//GET /favorites
+http  -p HBhb :8000/favorites
 
 
 

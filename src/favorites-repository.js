@@ -1,56 +1,50 @@
 const knex = require('../knex');
 
 class FavoritesRepository {
-  constructor() {
 
-  }
-
-    //NOTE borrows from books repo'
     // GET5 gets entry by user_ID
-  query(id){
-    if(!id){
-      return knex('books').orderBy('title');
+  query(userId, bookId){
+    if(!bookId){
+      return knex('favorites')
+          .where('user_id', userId)
+          .orderBy('id');
     }
     else{
-      return knex('books')
-        .where('id', id);
+      return knex('favorites')
+        .where({user_id: userId, book_id: bookId});
     }
-
   }
-  //NOTE borrows from books repo'
-  add(item){
 
-    if(item.title && item.genre && item.author && item.description && item.cover_url){
+  add(userId, bookId){
 
-      return knex.insert(item, 'id')
-        .into('books')
-        .then((ids) => {
-
-          return knex('books')
-              .where('id',ids[0]);
+    return query(userId, bookId)
+      .then((fav) => {
+        if(fav.length > 0){
+          return fav;
+        }
+        return knex.insert({book_id: bookId, user_id: userId})
+          .into('favorites')
+          .returning('*');
       });
-    }
   }
 
-    //NOTE borrows from books repo'
 
-  remove(id){
+  remove(userId, bookId){
+    var returnArr = [];
+    return knex('favorites')
+        .where({user_id: userId, book_id: bookId})
+      .then( (deletedEntries) => {
+        returnArr.push(deletedEntries[0]);
 
-    return knex('books').where('id', id)
-      .then( (deletedEntry) => {
-        var returnArr = [deletedEntry];
-
-        let deleteOperation = knex('books')
-          .where('id', id)
+        return knex('favorites')
+          .where('id', deletedEntries[0].id)
           .del();
-
-        return deleteOperation.then((isDeleted) => {
+        })
+        .then((isDeleted) => {
           returnArr.push(isDeleted);
           return returnArr;
-        })
-      });
+    });
   }
-
-}
+} //END class
 
 module.exports = FavoritesRepository;
