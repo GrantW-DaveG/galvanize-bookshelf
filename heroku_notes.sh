@@ -6,7 +6,9 @@ heroku config:set 'JWT_KEY=5AhdmefVs8NL2sx1creXCeRoiOEXfPZKFL6fY6v5/xRbqXXnvLKN6
 
 heroku addons:create heroku-postgresql:hobby-dev
 
-git push heroku master (?)
+heroku create
+
+git push heroku master
 
 (then add hreoku-postbuild script to package.json.  Already there for us...)
 "scripts": {
