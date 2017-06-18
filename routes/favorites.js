@@ -13,10 +13,10 @@ router.get('/', checkForToken, verifyUser, (req, res, next)=>{
   var decoded = jwt.decode(req.cookies.token);
 
   //GET6 upon return .then( allFAvs)  massage data returning
-  repo.query(humps.decamelizeKeys(decoded.id))
+  repo.query(humps.decamelizeKeys(decoded.sub.id))
     .then(resolvedFavs => {
       //GET7  put data in body and send with status 200
-      res.send(resolvedFavs);
+      res.send(humps.camelizeKeys(resolvedFavs));
       return;
     })
     .catch(err => err);
@@ -26,13 +26,14 @@ router.get('/check',checkForToken, verifyUser, (req, res, next)=>{
   var decoded = jwt.decode(req.cookies.token);
   var bookId = humps.decamelizeKeys(req.query.bookId);
 
-  console.log(`bookId=${bookId}, userId=${decoded.id}`);
-  repo.query(decoded.id, bookId)
+  repo.query(decoded.sub.id, bookId)
     .then(resolvedFavs => {
       if(resolvedFavs.length > 0){
+        res.setHeader('Content-Type', 'application/json');
         res.send('true');
         return;
       }
+      res.setHeader('Content-Type', 'application/json');
       res.send('false');
       return;
     })
@@ -45,14 +46,14 @@ router.post('/', checkForToken, verifyUser, (req, res, next)=>{
   var decoded = jwt.decode(req.cookies.token);
   var bookId = humps.decamelizeKeys(req.body.bookId);
 
-  repo.add(decoded.id, bookId)
+  repo.add(decoded.sub.id, bookId)
     .then(resolvedAdded => {
       if(resolvedAdded.length === 0){
         res.setHeader('Content-Type', 'text/plain');
         res.status(404).send('Book not found');
         return;
       }
-      res.send(resolvedAdded[0]);
+      res.send(humps.camelizeKeys(resolvedAdded[0]));
     })
     .catch(err => err);
 });
@@ -61,10 +62,10 @@ router.delete('/', checkForToken, verifyUser, (req, res, next)=>{
   var decoded = jwt.decode(req.cookies.token);
   var bookId = humps.decamelizeKeys(req.body.bookId);
 
-  repo.remove(decoded.id, bookId)
+  repo.remove(decoded.sub.id, bookId)
     .then(resolvedDeleted => {
       if(resolvedDeleted[1]){
-        res.send(resolvedDeleted[0]);
+        res.send(humps.camelizeKeys(resolvedDeleted[0]));
         return;
       }
       res.status(404).send('Favorite not found');
@@ -72,6 +73,16 @@ router.delete('/', checkForToken, verifyUser, (req, res, next)=>{
     .catch(err => err);
 });
 
+
+
+function checkForToken(req, res, next){
+  if(req.cookies.token){
+    next();
+    return;
+  }
+  res.setHeader('Content-Type', 'plain/text');
+  res.status(401).send('Unauthorized');
+}
 
 function verifyUser(req, res, next){
 
@@ -90,18 +101,6 @@ function verifyUser(req, res, next){
 }
 
 
-function checkForToken(req, res, next){
-  if(req.cookies.token){
-    next();
-    return;
-  }
-  else{
-    res.setHeader('Content-Type', 'application/json');
-    res.status(401).send('Unauthorized');
-    return;
-  }
-
-}
 
 module.exports = router;
 

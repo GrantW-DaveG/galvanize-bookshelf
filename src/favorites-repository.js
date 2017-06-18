@@ -7,7 +7,7 @@ class FavoritesRepository {
     if(!bookId){
       return knex('favorites')
           .where('user_id', userId)
-          .orderBy('id');
+          .innerJoin('books', 'favorites.book_id', 'books.id');
     }
     else{
       return knex('favorites')
@@ -17,7 +17,7 @@ class FavoritesRepository {
 
   add(userId, bookId){
 
-    return query(userId, bookId)
+    return this.query(userId, bookId)
       .then((fav) => {
         if(fav.length > 0){
           return fav;
@@ -42,6 +42,7 @@ class FavoritesRepository {
         })
         .then((isDeleted) => {
           returnArr.push(isDeleted);
+          delete returnArr[0].id;
           return returnArr;
     });
   }
