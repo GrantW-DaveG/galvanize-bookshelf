@@ -20,5 +20,7 @@ heroku run bash
 npm run knex seed:run
 exit
 
+(add Procfile containing only "web: node server.js" without quotes)
+
 heroku open
 
