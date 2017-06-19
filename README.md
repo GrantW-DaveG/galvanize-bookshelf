@@ -1,18 +1,12 @@
-#### [⇐ Previous](6_heroku_deployment.md) | [Next ⇒](1_migrations_seeds.md)
 
-# Galvanize Bookshelf
+# Grant & Dave's - Galvanize Bookshelf
 
-This is a multi-day assignment split into the following parts. Your task is to complete each part's assignment, one at a time, before moving on to the next part.
+Bookshelf is an app designed to allow users to view a collection of books.  It can be accessed  [here](https://grant-dave-galvanize-bookshelf.herokuapp.com/).
 
-1. [Knex Migrations and Seeds](1_migrations_seeds.md)
-1. [Express and Knex](2_express_knex.md)
-1. [User Registration](3_user_registration.md)
-1. [User Authentication](4_user_authentication.md)
-1. [User Authorization](5_user_authorization.md)
-1. [Heroku Deployment](6_heroku_deployment.md)
+![alt text](assets/bookshelf.png "Bookshelf app")
 
-Additionally, each part has a set of optional bonus assignments to try once you completed the its main assignment. Since parts share many of the same bonus assignments, you may move to the next part without having finished all the bonuses.
+Upon visiting the site, the user is presented with a full list of all available titles.  It is not necessary to log into the site to view the full list.  The user is also able to view details of individual titles without needing to be logged in.
 
-The [solutions](https://github.com/gSchool/galvanize-bookshelf-solution) are available to instructors as well as students who've completed this series.
+To log into Bookshelf, a user must first create an account by visiting the "Sign up" link in the navbar.  Once an account is established, a user is allowed to log in using the "log in" link.  Being logged in allows a user to add any books from the collection to the user's personalized "Favorites" section which is also accessible from the link in the navbar.  
 
-#### [⇐ Previous](6_heroku_deployment.md) | [Next ⇒](1_migrations_seeds.md)
+To terminate his or her session, a user may then select "Log out" from the navbar.
